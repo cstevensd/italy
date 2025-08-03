@@ -1,0 +1,6 @@
+{
+  "name": "Italy Trip Planner",
+  "description": "An application to consolidate all essential information for a trip to Italy, including schedules, bookings, to-do lists, and AI-powered destination guides.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
