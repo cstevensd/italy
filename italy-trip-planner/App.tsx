@@ -9,6 +9,7 @@ import TodoList from './pages/TodoList';
 import Destinations from './pages/Destinations';
 import Trains from './pages/Trains';
 import Phrases from './pages/Phrases';
+import CurrencyConverter from './pages/CurrencyConverter';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/todo" element={<TodoList />} />
           <Route path="/destinations" element={<Destinations />} />
           <Route path="/phrases" element={<Phrases />} />
+          <Route path="/currency" element={<CurrencyConverter />} />
         </Routes>
       </main>
     </div>

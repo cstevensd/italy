@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { flights, accommodations } from '../data/tripData';
-import { Flight, Accommodation, FlightDetails } from '../types';
+import { flights, accommodations, trainBookings } from '../data/tripData';
+import { Flight, Accommodation, FlightDetails, TrainBooking } from '../types';
 import { Icon } from '../components/Icon';
 
 const airlineManageBookingLinks: { [key: string]: string } = {
@@ -15,18 +15,51 @@ const FlightDetailRow: React.FC<{ label: string; value?: string }> = ({ label, v
     )
 }
 
-const FlightLeg: React.FC<{ leg: FlightDetails, type: 'Outbound' | 'Return' }> = ({ leg, type }) => (
-    <div>
-        <h4 className="font-bold text-lg text-brand-secondary mb-2">{type}</h4>
-        <div className="space-y-1.5">
-            <FlightDetailRow label="Airline" value={`${leg.airline} (${leg.flightNumber})`} />
-            <FlightDetailRow label="Departure" value={leg.departure} />
-            <FlightDetailRow label="Arrival" value={leg.arrival} />
-            <FlightDetailRow label="Duration" value={leg.duration} />
-            <FlightDetailRow label="Seats" value={leg.seats} />
+const getAirportCode = (locationString: string): string => {
+    return locationString.split(' ').pop() || locationString;
+};
+
+const FlightLeg: React.FC<{ leg: FlightDetails, type: 'Outbound' | 'Return' }> = ({ leg, type }) => {
+    const departureAirportCode = getAirportCode(leg.departure);
+    const arrivalAirportCode = getAirportCode(leg.arrival);
+
+    const departureMapUrl = leg.departureMapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${departureAirportCode} airport ${leg.departureTerminal || ''}`.trim())}`;
+    const arrivalMapUrl = leg.arrivalMapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${arrivalAirportCode} airport ${leg.arrivalTerminal || ''}`.trim())}`;
+    
+    return (
+        <div>
+            <h4 className="font-bold text-lg text-brand-secondary mb-2">{type}</h4>
+            <div className="space-y-2">
+                <FlightDetailRow label="Airline" value={`${leg.airline} (${leg.flightNumber})`} />
+                
+                <div>
+                    <p className="text-sm text-brand-text-muted">
+                        <span className="font-semibold text-brand-text-main">Departure:</span>
+                        <a href={departureMapUrl} target="_blank" rel="noopener noreferrer" className="ml-1 group inline-flex items-center hover:text-brand-accent transition-colors">
+                            <span>{leg.departure}</span>
+                            <Icon name="map-pin" className="w-3.5 h-3.5 ml-1.5 text-gray-400 group-hover:text-brand-accent transition-colors" />
+                        </a>
+                    </p>
+                    {leg.departureTerminal && <p className="text-xs text-brand-text-muted ml-2">↳ <span className="font-medium">Terminal:</span> {leg.departureTerminal}</p>}
+                </div>
+
+                <div>
+                    <p className="text-sm text-brand-text-muted">
+                        <span className="font-semibold text-brand-text-main">Arrival:</span>
+                        <a href={arrivalMapUrl} target="_blank" rel="noopener noreferrer" className="ml-1 group inline-flex items-center hover:text-brand-accent transition-colors">
+                            <span>{leg.arrival}</span>
+                            <Icon name="map-pin" className="w-3.5 h-3.5 ml-1.5 text-gray-400 group-hover:text-brand-accent transition-colors" />
+                        </a>
+                    </p>
+                     {leg.arrivalTerminal && <p className="text-xs text-brand-text-muted ml-2">↳ <span className="font-medium">Terminal:</span> {leg.arrivalTerminal}</p>}
+                </div>
+                
+                <FlightDetailRow label="Duration" value={leg.duration} />
+                <FlightDetailRow label="Seats" value={leg.seats} />
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 
 const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
@@ -95,6 +128,85 @@ const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
     );
 };
 
+const TrainBookingCard: React.FC<{ booking: TrainBooking }> = ({ booking }) => {
+    const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+    const handleCopy = (codeToCopy: string) => {
+        navigator.clipboard.writeText(codeToCopy).then(() => {
+            setCopiedCode(codeToCopy);
+            setTimeout(() => {
+                setCopiedCode(null);
+            }, 2000); // Reset after 2 seconds
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    };
+
+    const getStationNameFromBookingString = (locationString: string) => locationString.split(',')[0].trim();
+
+    const departureStationName = getStationNameFromBookingString(booking.departure);
+    const arrivalStationName = getStationNameFromBookingString(booking.arrival);
+
+    const departureMapUrl = booking.departureMapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(departureStationName + ' station')}`;
+    const arrivalMapUrl = booking.arrivalMapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(arrivalStationName + ' station')}`;
+
+    return (
+        <div className="bg-brand-surface rounded-xl p-6 shadow-subtle">
+            <h3 className="text-xl font-bold text-brand-text-main mb-4">{booking.passenger}</h3>
+
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center border-b border-brand-border pb-4 mb-4">
+                <div className="flex items-center gap-3">
+                    <Icon name="train" className="w-8 h-8 text-brand-accent flex-shrink-0"/>
+                    <div className="space-y-1">
+                        <a href={departureMapUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-semibold text-brand-text-main group">
+                            <Icon name="map-pin" className="w-4 h-4 text-brand-text-muted group-hover:text-brand-accent transition-colors flex-shrink-0" />
+                            <span className="group-hover:text-brand-accent group-hover:underline transition-colors">{booking.departure}</span>
+                        </a>
+                        <a href={arrivalMapUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 font-semibold text-brand-text-main group">
+                            <Icon name="map-pin" className="w-4 h-4 text-brand-text-muted group-hover:text-brand-accent transition-colors flex-shrink-0" />
+                            <span className="group-hover:text-brand-accent group-hover:underline transition-colors">{booking.arrival}</span>
+                        </a>
+                    </div>
+                </div>
+                <div className="text-left md:text-right flex-shrink-0">
+                    <p className="font-semibold text-brand-text-main">{booking.duration}</p>
+                    <p className="text-sm text-brand-text-muted">Duration</p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                <div className="space-y-2">
+                    <h4 className="font-bold text-brand-secondary">Details</h4>
+                    <div className="grid grid-cols-3 gap-2 text-sm">
+                        <div><span className="font-semibold text-brand-text-main">Class:</span> {booking.class}</div>
+                        <div><span className="font-semibold text-brand-text-main">Coach:</span> {booking.coach}</div>
+                        <div className="col-span-3 sm:col-span-1"><span className="font-semibold text-brand-text-main">Seats:</span> {booking.seats}</div>
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <h4 className="font-bold text-brand-secondary">Confirmation</h4>
+                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <p className="text-sm text-brand-text-muted whitespace-nowrap">
+                            <span className="font-semibold text-brand-text-main">Trenitalia:</span>
+                            <span className="font-mono ml-2 p-1 bg-brand-background rounded">{booking.confirmationNumber}</span>
+                        </p>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                            <button
+                                onClick={() => handleCopy(booking.confirmationNumber)}
+                                className="inline-flex items-center bg-gray-100 text-brand-text-muted font-semibold px-3 py-1.5 rounded-lg hover:bg-brand-border transition-all duration-200 text-sm w-32 justify-center"
+                                aria-label={`Copy confirmation code ${booking.confirmationNumber}`}
+                            >
+                                <Icon name={copiedCode === booking.confirmationNumber ? 'check' : 'copy'} className="w-4 h-4 mr-2 transition-all" />
+                                {copiedCode === booking.confirmationNumber ? 'Copied!' : 'Copy Code'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const AccommodationCard: React.FC<{ accom: Accommodation }> = ({ accom }) => (
     <div className="bg-brand-surface rounded-xl shadow-subtle flex flex-col overflow-hidden transition-shadow hover:shadow-lifted">
         <img src={accom.imageUrl} alt={`View of ${accom.name}`} className="w-full h-48 object-cover" />
@@ -146,6 +258,17 @@ const Bookings: React.FC = () => {
           {flights.map((flight, index) => <FlightCard key={index} flight={flight} />)}
         </div>
       </div>
+
+      <div>
+        <div className="flex items-center mb-6">
+          <Icon name="train" className="w-10 h-10 text-brand-accent" />
+          <h1 className="text-4xl font-extrabold text-brand-primary ml-3">Train Tickets</h1>
+        </div>
+        <div className="space-y-6">
+          {trainBookings.map((booking, index) => <TrainBookingCard key={index} booking={booking} />)}
+        </div>
+      </div>
+
       <div>
         <div className="flex items-center mb-6">
           <Icon name="bed" className="w-10 h-10 text-brand-accent" />

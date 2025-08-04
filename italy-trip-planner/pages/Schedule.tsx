@@ -2,6 +2,7 @@
 import React from 'react';
 import { schedule } from '../data/tripData';
 import { Icon } from '../components/Icon';
+import Countdown from '../components/Countdown';
 
 const Schedule: React.FC = () => {
   return (
@@ -11,6 +12,8 @@ const Schedule: React.FC = () => {
         <h1 className="text-4xl font-extrabold text-brand-primary ml-3">Trip Schedule</h1>
       </div>
       
+      <Countdown schedule={schedule} />
+
       <div className="relative">
         {/* Vertical line */}
         <div className="absolute left-6 top-2 bottom-2 w-0.5 bg-brand-border rounded-full"></div>

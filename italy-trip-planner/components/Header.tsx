@@ -32,6 +32,7 @@ const Header: React.FC = () => {
         { path: '/todo', name: 'To-Do' },
         { path: '/destinations', name: 'Guides' },
         { path: '/phrases', name: 'Phrases' },
+        { path: '/currency', name: 'Converter' },
     ];
 
   return (

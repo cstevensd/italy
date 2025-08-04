@@ -1,4 +1,5 @@
-import { ScheduleItem, Flight, Accommodation, TodoItemType, Traveler } from '../types';
+
+import { ScheduleItem, Flight, Accommodation, TodoItemType, Traveler, TrainBooking } from '../types';
 
 export const travelers = ['Audrey', 'Grace', 'Tessy'];
 
@@ -27,7 +28,7 @@ export const schedule: ScheduleItem[] = [
   { 
     date: 'Aug 10', 
     activity: 'Private Mosaic Lesson & Rome Exploration', 
-    notes: '2-hour private lesson from 3:30 PM - 5:30 PM. Confirmation: GYG83X24KY5Q.',
+    notes: '2-hour private lesson from 3:30 PM - 5:30 PM. Confirmation: GYG83X24KY5Q. Meet Maria Teresa.',
     address: 'Via Paolo VI, 27/29, 00193 Roma RM, Italy'
   },
   { 
@@ -74,6 +75,9 @@ export const flights: Flight[] = [
       departure: 'Aug 07, 2025, 9:40 p.m. YYZ',
       arrival: 'Aug 08, 2025, 12:15 p.m. FCO',
       seats: '20K, 20J',
+      departureTerminal: 'Terminal 3',
+      arrivalTerminal: 'Terminal 3',
+      departureMapUrl: "https://www.google.com/maps/place/Terminal+3,+Mississauga,+ON,+Canada/@43.6846016,-79.6218971,15.44z/data=!4m6!3m5!1s0x882b396c195fcd2b:0x22ec6c583a711fa5!8m2!3d43.6856208!4d-79.6205582!16s%2Fg%2F1jkxvbxx6?entry=ttu&g_ep=EgoyMDI1MDczMC4wIKXMDSoASAFQAw%3D%3D"
     },
     return: {
       airline: 'Air Transat',
@@ -81,6 +85,8 @@ export const flights: Flight[] = [
       departure: 'Aug 18, 2025, 2:15 p.m. FCO',
       arrival: 'Aug 18, 2025, 6:00 p.m. YYZ',
       seats: '20K, 20J',
+      departureTerminal: 'Terminal 3',
+      arrivalTerminal: 'Terminal 3',
     },
     confirmationCodes: [
       { provider: 'Air Transat', code: 'C5LBBL' },
@@ -96,6 +102,8 @@ export const flights: Flight[] = [
       arrival: 'Aug 08, 2025, 11:55 a.m. FCO',
       duration: '11h 40m (nonstop)',
       seats: '50L',
+      departureTerminal: 'Tom Bradley Intl. Terminal (B)',
+      arrivalTerminal: 'Terminal 3',
     },
     return: {
       airline: 'ITA Airways',
@@ -104,6 +112,8 @@ export const flights: Flight[] = [
       arrival: 'Aug 18, 2025, 1:15 p.m. LAX',
       duration: '12h 45m (nonstop)',
       seats: '50A',
+      departureTerminal: 'Terminal 1',
+      arrivalTerminal: 'Tom Bradley Intl. Terminal (B)',
     },
     confirmationCodes: [
       { provider: 'ITA Airways', code: 'B7YMGN' },
@@ -132,6 +142,7 @@ export const todoList: TodoItemType[] = [
     { id: 6, task: 'Book Mosaic class', completed: true, assignees: ['Tessy'] },
     { id: 7, task: 'Book car', completed: true, assignees: ['Tessy'] },
     { id: 8, task: 'Get international drivers license', completed: true, assignees: ['Tessy'] },
+    { id: 14, task: 'Plan departure date travel to airport', completed: true, assignees: ['Audrey', 'Grace', 'Tessy'] },
 
     // Incomplete Tasks
     { 
@@ -156,7 +167,20 @@ export const todoList: TodoItemType[] = [
     },
     { id: 10, task: 'Book train ticket to Florence', completed: false, assignees: ['Tessy'], dueDate: florenceTicketDueDate.toISOString() },
     { id: 11, task: 'Book train ticket to Rome', completed: false, assignees: ['Tessy'] },
-    { id: 13, task: 'Get passport ready', completed: false, assignees: ['Audrey', 'Grace', 'Tessy'] },
-    { id: 14, task: 'Plan departure date travel to airport', completed: false, assignees: ['Audrey', 'Grace', 'Tessy'] },
     { id: 15, task: 'Pack for the trip', completed: false, assignees: ['Audrey', 'Grace', 'Tessy'] },
+];
+
+
+export const trainBookings: TrainBooking[] = [
+  {
+    passenger: 'Caitlyn StevensDietrich',
+    departure: 'Roma Termini, Aug 11, 2025, 4:05 p.m.',
+    arrival: 'Firenze SMN, Aug 11, 2025, 6:17 p.m.',
+    duration: '2h 12m',
+    confirmationNumber: 'AJ158U',
+    seats: '1, 2, 3',
+    coach: '4',
+    class: 'Smart',
+    departureMapUrl: 'https://maps.app.goo.gl/7Bn36y4CyydVPfNR6',
+  },
 ];

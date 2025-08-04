@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Countdown from '../components/Countdown';
 import { travelers, todoList } from '../data/tripData';
 import { Icon } from '../components/Icon';
 
@@ -36,9 +35,6 @@ const Home: React.FC = () => {
             <div className="relative h-full flex flex-col items-center justify-center text-white text-center p-4">
                 <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">Italia 2025</h1>
                 <p className="mt-2 text-lg sm:text-xl max-w-2xl opacity-90">Woop woop</p>
-                <div className="mt-8">
-                    <Countdown />
-                </div>
             </div>
         </div>
       

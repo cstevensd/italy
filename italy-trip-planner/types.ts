@@ -25,6 +25,10 @@ export interface FlightDetails {
   arrival: string;
   duration?: string;
   seats?: string;
+  departureTerminal?: string;
+  arrivalTerminal?: string;
+  departureMapUrl?: string;
+  arrivalMapUrl?: string;
 }
 
 export interface ConfirmationCode {
@@ -112,3 +116,18 @@ export interface PhraseCategory {
   category: string;
   phrases: Phrase[];
 }
+
+export interface TrainBooking {
+  passenger: string;
+  departure: string;
+  arrival: string;
+  duration: string;
+  confirmationNumber: string;
+  seats: string;
+  coach: string;
+  class: string;
+  departureMapUrl?: string;
+  arrivalMapUrl?: string;
+}
+
+export type Currency = 'USD' | 'CAD' | 'EUR';
